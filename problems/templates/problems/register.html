@@ -1,0 +1,19 @@
+{% extends "problems/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    {% if message %}
+        <div>{{message}}</div>
+    {% endif %}
+    <form method="post"  id="register-form" action="{% url 'register_view' %}">
+        {%csrf_token%}
+        <input type="text" placeholder="Username" name="username">
+        <input type="email" placeholder="Email" name="email">
+        <input type="password" placeholder="Password" name="password">
+        <input type="password" placeholder="Confirm Password" name="confirmation">
+        <input type="submit" value="Register"> 
+    </form>
+
+    <p>Already have an account? <a href="{% url 'login_view' %}">Login</a></p>
+{% endblock %}

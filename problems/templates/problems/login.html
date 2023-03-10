@@ -1,0 +1,13 @@
+{% extends "problems/layout.html" %}
+
+{% block body %}
+
+    <form method="post" action="{% url 'login_view' %}">
+        {%csrf_token%}
+        <input type="text" placeholder="Username" name="username">
+        <input type="password" placeholder="Password" name="password">
+        <input type="submit" value="Login">
+    </form>
+
+    <p>Don't have an account? <a href="{% url 'register_view' %}"> Register </a></p>
+{% endblock %}

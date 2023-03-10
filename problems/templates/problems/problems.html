@@ -1,0 +1,21 @@
+{% extends "problems/layout.html" %}
+
+{% block body %}
+
+    <ul>
+        <!-- {%for problem in solvedProblems%}
+            <li>{{problem}}</li>
+        {% endfor %}
+        <br>
+        <br>
+        {% for problem in allProblems %}
+            <li> {{problem}} </li>
+        {% endfor %} -->
+        {% for problem in allProblems %}
+            {% if problem not in solvedProblems%}
+                <li>{{problem}}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+{% endblock %}
