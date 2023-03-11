@@ -3,15 +3,43 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
-from .models import User
+from .models import User, Tag, Problem, LastProblemUpdate
 import requests
+import datetime
+
+
+
 
 # Create your views here.
 
-allProblems = requests.get(f"https://codeforces.com/api/problemset.problems").json()["result"]
+allProblems = []
 
 def index(request):
-    return render(request, "problems/layout.html")
+    lastTime = LastProblemUpdate.objects.get(pk=1).lastUpdate
+    curTime = datetime.datetime.now()
+    if lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year: 
+        allProblems = requests.get(f"https://codeforces.com/api/problemset.problems").json()["result"]["problems"]
+        O = LastProblemUpdate.objects.get(pk = 1)
+        O.lastUpdate = datetime.datetime.now()
+        O.save()
+        for problem in allProblems:
+            if problem["name"] == "Weird Sum":
+                print(problem["contestId"])
+                print(problem["index"])
+            if len(Problem.objects.filter(contestID=problem["contestId"], index=problem["index"])) > 0:
+                continue
+                
+            newProblem = Problem(name=problem["name"], index=problem["index"], contestID=problem["contestId"])
+            newProblem.save()
+            for tag in problem["tags"]:
+                if len(Tag.objects.filter(name=tag)) == 0:
+                    newTag = Tag.objects.create(name=tag)
+                    newTag.save()
+                    newProblem.tags.add(newTag)
+                else:
+                    newProblem.tags.add(Tag.objects.get(name=tag))
+            newProblem.save()
+    return render(request, "problems/index.html")
 
 def login_view(request):
     if request.method == "POST":
@@ -59,21 +87,26 @@ def register_view(request):
         return render(request, "problems/register.html")
 
 
+def updatedToday(date):
+    curDate = datetime.datetime.now()
+    if date.year != curDate.year or date.month != curDate.month or date.year != curDate.year:
+        return False
+    return True
+
 def problems(request):
     if request.user.is_authenticated:
-        user = request.user
-        respond = requests.get(f"https://codeforces.com/api/user.status?handle={user.username}").json()["result"]
-        solvedProblems = []
-        for problem in respond:
-            solvedProblems.append(problem["problem"])
-        
-        # for problem in allProblems:
-        #     if problem not in solvedProblems:
-        #         unsolvedProblems.append(problem)
-        return render(request, "problems/problems.html", {
-            'solvedProblems' : solvedProblems,
-            'allProblems' : allProblems["problems"]
-        })
-    else:
-        return HttpResponseRedirect("index")
-        
+        lastTime = request.user.lastUpdate
+        curTime = datetime.datetime.now()
+        if lastTime == None or lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year:
+            results = requests.get(f"https://codeforces.com/api/user.status?handle={request.user.username}").json()["result"]
+            for result in results:
+                verdict = result["verdict"]
+                if len(result["problem"]["tags"]) > 0 and verdict == "OK" and result["contestId"] <= 1000000:
+                    if len(Problem.objects.filter(contestID=result["contestId"], index=result["problem"]["index"])) == 0:
+                        continue
+                    accProblem = Problem.objects.get(contestID=result["contestId"], index=result["problem"]["index"])
+                    accProblem.users.add(request.user)
+                    accProblem.save()
+    return HttpResponse("hi")
+            
+    
