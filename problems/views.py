@@ -4,7 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
 from .models import User, Tag, Problem, LastProblemUpdate
+from django.db.models import Q
 import requests
+import random
 import datetime
 
 
@@ -15,21 +17,16 @@ import datetime
 allProblems = []
 
 def index(request):
-    lastTime = LastProblemUpdate.objects.get(pk=1).lastUpdate
+
+    lastTime = LastProblemUpdate.objects.get(pk = 1).lastUpdate
     curTime = datetime.datetime.now()
     if lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year: 
         allProblems = requests.get(f"https://codeforces.com/api/problemset.problems").json()["result"]["problems"]
-        O = LastProblemUpdate.objects.get(pk = 1)
-        O.lastUpdate = datetime.datetime.now()
-        O.save()
+        
         for problem in allProblems:
-            if problem["name"] == "Weird Sum":
-                print(problem["contestId"])
-                print(problem["index"])
             if len(Problem.objects.filter(contestID=problem["contestId"], index=problem["index"])) > 0:
                 continue
-                
-            newProblem = Problem(name=problem["name"], index=problem["index"], contestID=problem["contestId"])
+            newProblem = Problem(name=problem["name"], index=problem["index"], contestID=problem["contestId"], rate =problem.get("rating"))
             newProblem.save()
             for tag in problem["tags"]:
                 if len(Tag.objects.filter(name=tag)) == 0:
@@ -39,6 +36,9 @@ def index(request):
                 else:
                     newProblem.tags.add(Tag.objects.get(name=tag))
             newProblem.save()
+        O = LastProblemUpdate.objects.get(pk = 1)
+        O.lastUpdate = datetime.datetime.now()
+        O.save()
     return render(request, "problems/index.html")
 
 def login_view(request):
@@ -105,8 +105,31 @@ def problems(request):
                     if len(Problem.objects.filter(contestID=result["contestId"], index=result["problem"]["index"])) == 0:
                         continue
                     accProblem = Problem.objects.get(contestID=result["contestId"], index=result["problem"]["index"])
+                    if request.user in accProblem.users.all():
+                        continue
                     accProblem.users.add(request.user)
                     accProblem.save()
-    return HttpResponse("hi")
+                    
+            request.user.lastUpdate = datetime.datetime.now()
+            request.user.save()
+        userRating = int(requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]["rating"])
+        userRating = (userRating // 100) * 100
+        minRating = max(800, userRating - 200)
+        maxRating = min(4000, userRating + 400)
+        userProblems = []
+        print(request.user)
+        for curRate in range(minRating, maxRating, 100):
+            print(curRate)
+            tmpList = []
+            for problem in Problem.objects.exclude(~Q(rate=curRate) | Q(rate=None)):
+                if not problem.users.filter(username=request.user.username).exists():
+                    tmpList.append(problem)
+            print(len(tmpList))
+            userProblems.append(random.choice(tmpList))
+
+        return render(request, "problems/problems.html", {
+            'problems' : userProblems
+        })
+    return render(request, "problems/login.html")
             
     

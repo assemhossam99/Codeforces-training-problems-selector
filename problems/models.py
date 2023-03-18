@@ -19,6 +19,7 @@ class Problem(models.Model):
     name = models.CharField(max_length = 128)
     index = models.CharField(max_length = 4)
     contestID = models.IntegerField()
+    rate = models.IntegerField(null=True)
     tags = models.ManyToManyField(Tag, related_name="problems")
     users = models.ManyToManyField(User, related_name="problems")
 

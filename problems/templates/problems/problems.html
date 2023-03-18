@@ -3,10 +3,10 @@
 {% block body %}
 
     <ul>
-        {% for problem in allProblems %}
-            {% if problem not in solvedProblems%}
-                <li>{{problem}}</li>
-            {% endif %}
+        {% for problem in problems %}
+            <li class="problem">
+                <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}">{{problem}} - {{problem.rate}}</a>
+            </li>
         {% endfor %}
     </ul>
 
