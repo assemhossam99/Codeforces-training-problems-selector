@@ -159,9 +159,21 @@ def getProblems(problems, users):
 
 def newContest(request):
     if request.method == "POST":
+        import pytz
+        errorMessage = ""
         users = request.POST["users"].split(',')
+        for user in users:
+            if not User.objects.filter(username=user).exists():
+                errorMessage = f"user {user} is not registered"
         startDate = request.POST["startDate"]
         duration = request.POST["duration"]
+
+        if duration == "" or int(duration) < 10:
+            errorMessage = "Contest duration must be at least 10 minutes" 
+        if errorMessage != None:
+            return render(request, "problems/newContest.html", {
+                'errorMessage' : errorMessage
+            })
         contestProblems = []
         contestProblems.append(getProblems(Problem.objects.filter(rate__range=(800, 900)), users))
         contestProblems.append(getProblems(Problem.objects.filter(rate__range=(900, 1200)), users))
@@ -225,7 +237,11 @@ def getProblem(problems, users, tags, problemNumbers):
 
 def newSheet(request):
     if request.method == "POST":
+        errorMessage = ""
         users = request.POST["users"].split(',')
+        for user in users:
+            if not User.objects.filter(username=user).exists():
+                errorMessage = f"user {user} is not registered"
         tags=request.POST.getlist('tags')   
         minRate = request.POST['minRate']
         maxRate = request.POST['maxRate']
@@ -235,6 +251,15 @@ def newSheet(request):
             maxRate = 4000
         print(maxRate)
         problemNumbers = request.POST['problemsNumber']
+        if int(problemNumbers) > 30:
+            errorMessage = "Sheet can have 30 problems maximum"
+        elif int(problemNumbers) <= 0:
+            errorMessage = "Contest Should have at least one problem"
+        if errorMessage != "":
+            return render(request, "problems/newSheet.html", {
+                'errorMessage' : errorMessage,
+                'tags' : Tag.objects.all()
+            })
         sheetProblems = []
         sheet = Sheet(maxRate=maxRate, minRate=minRate)
         sheet.save()

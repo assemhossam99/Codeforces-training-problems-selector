@@ -40,3 +40,15 @@ ul #problems{
     display: inline-block;
     text-align: left;
 }
+
+.errorMessage{
+    width: 100%;
+    text-align: center;
+    background-color: rgb(226, 161, 161);
+    color: rgb(130, 7, 7);
+    padding: 10px;
+    margin: 5px;
+    border: solid;
+    border-color: rgb(116, 5, 5);
+    font-weight: bold;
+}

@@ -2,6 +2,10 @@
 
 {% block body %}
 
+    {% if errorMessage %}
+        <div class="errorMessage">{{errorMessage}}</div>
+    {% endif %}
+
     <form method="post" action="{% url 'newContest' %}">
         {% csrf_token %}
         <label> Enter all the users to particpate in the contest separated by a comma:</label>
