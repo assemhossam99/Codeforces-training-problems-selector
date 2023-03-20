@@ -34,3 +34,13 @@ class Contest(models.Model):
 
     def __str__(self):
         return f"Contest - {self.id}"
+
+class Sheet(models.Model):
+    minRate = models.IntegerField(default=800)
+    maxRate = models.IntegerField(default=4000)
+    problems = models.ManyToManyField(Problem, related_name="sheets")
+    users = models.ManyToManyField(User, related_name="sheets")
+    tags = models.ManyToManyField(Tag, related_name="sheets", null=True)
+
+    def __str__(self):
+        return f"Sheet - {self.id}"

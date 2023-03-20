@@ -8,5 +8,7 @@ urlpatterns = [
     path('register', views.register_view, name="register_view"),
     path('problems', views.problems, name="problems"),
     path('newContest', views.newContest, name="newContest"),
-    path('contest/<int:contestID>', views.contest, name="contest")
+    path('newSheet', views.newSheet, name="newSheet"),
+    path('contest/<int:contestID>', views.contest, name="contest"),
+    path('sheet/<int:sheetID>', views.sheet, name="sheet")
 ]
