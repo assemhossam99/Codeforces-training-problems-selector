@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
-from .models import User, Tag, Problem, LastProblemUpdate
+from .models import User, Tag, Problem, LastProblemUpdate, Contest
 from django.db.models import Q
 import requests
 import random
@@ -131,5 +131,63 @@ def problems(request):
             'problems' : userProblems
         })
     return render(request, "problems/login.html")
+
+
+def getProblem(problems, users):
+    tmp = []
+    for problem in problems:
+        allUsers = True
+        for user in users:
+            if problem.users.filter(username = user).exists():
+                allUsers = False
+        if allUsers == True:
+            tmp.append(problem)
+    return random.choice(tmp)
             
+
+def newContest(request):
+    if request.method == "POST":
+        print('hey')
+        users = request.POST["users"].split(',')
+        startDate = request.POST["startDate"]
+        duration = request.POST["duration"]
+        contestProblems = []
+        contestProblems.append(getProblem(Problem.objects.filter(rate__range=(800, 900)), users))
+        contestProblems.append(getProblem(Problem.objects.filter(rate__range=(900, 1200)), users))
+        contestProblems.append(getProblem(Problem.objects.filter(rate__range=(1200, 1600)), users))
+        contestProblems.append(getProblem(Problem.objects.filter(rate__range=(1600, 2000)), users))
+        contestProblems.append(getProblem(Problem.objects.filter(rate__range=(2000, 4000)), users))
+        print(contestProblems)
+        contest = Contest(duration=duration, startTime=startDate)
+        contest.save()
+        for user in users:
+            contest.users.add(User.objects.get(username=user))
+        for problem in contestProblems:
+            contest.problems.add(problem)
+        contest.save()
+        return HttpResponseRedirect(f'contest/{contest.id}')
+    return render(request, "problems/newContest.html")
+
+
+def contest(request, contestID):
+    import pytz
+    contest = Contest.objects.get(id=contestID)
+    contestProblems = contest.problems.all().order_by('rate')
+
+    start = contest.startTime
+    duration = contest.duration
+    time_change = datetime.timedelta(minutes=duration)
+    end = start + time_change
+    end = end.replace(tzinfo=pytz.utc)
+    now = datetime.datetime.now()
+    now = now.replace(tzinfo=pytz.utc)
+    ended = False
+    if now > end:
+        ended = True
     
+    return render(request, "problems/contest.html", {
+        'problems' : contestProblems,
+        'id' : contestID,
+        'end' : end,
+        'ended' : ended
+    })

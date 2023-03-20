@@ -1,0 +1,23 @@
+{% extends "problems/layout.html" %}
+
+{% block body %}
+
+<h2>Contest - {{id}}</h2>
+{% if ended %}
+    <h3>Contest ended.</h3>
+{% else  %}
+    <div>Ends at {{end}}</div>
+    <div class="problems_container">
+        <ul id="problems">
+            {% for problem in problems %}
+            <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}" class="problemLink">
+                <li class="problem">
+                    {{problem}}
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    
+{% endblock %}

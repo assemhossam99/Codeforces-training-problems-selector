@@ -14,11 +14,22 @@
             <h6>Signed in as {{user.username}}</h6>
         {% endif %}
         <ul id="links">
+            <li>
+                <a href="{% url 'index' %}"> Home </a>
+            </li>
             {% if user.is_authenticated %}
                 <li>
                     <a href="{% url 'logout_view' %}"> Logout </a>
                 </li>
-
+                
+                <li>
+                    <a href="{% url 'problems' %}"> Solve Problems </a>
+                </li>
+                
+                <li>
+                    <a href="{% url 'newContest' %}"> Create New Contest </a>
+                </li>
+                
             {%else%}
                 <li>
                     <a href="{% url 'login_view' %}"> Login</a>

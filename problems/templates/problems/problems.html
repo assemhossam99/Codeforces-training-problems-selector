@@ -2,12 +2,16 @@
 
 {% block body %}
 
-    <ul>
-        {% for problem in problems %}
-            <li class="problem">
-                <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}">{{problem}} - {{problem.rate}}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="problems_container">
+        <ul id="problems">
+            {% for problem in problems %}
+                <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}" class="problemLink">
+                    <li class="problem">
+                        {{problem}} - {{problem.rate}}
+                    </li>
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
 
 {% endblock %}

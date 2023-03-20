@@ -1,0 +1,14 @@
+{% extends "problems/layout.html" %}
+
+{% block body %}
+
+    <form method="post" action="{% url 'newContest' %}">
+        {% csrf_token %}
+        <label> Enter all the users to particpate in the contest separated by a comma:</label>
+        <input type="text" placeholder="Users" name="users">
+        <input type="datetime-local" name="startDate">
+        <input type="number" placeholder="Duration in seconds" name="duration">
+        <input type="submit" value="Create Contest">
+    </form>
+
+{% endblock %}

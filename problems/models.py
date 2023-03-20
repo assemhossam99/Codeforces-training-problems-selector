@@ -26,3 +26,11 @@ class Problem(models.Model):
     def __str__(self):
         return f"{self.index}-{self.name}"
 
+class Contest(models.Model):
+    startTime = models.DateTimeField(null=True)
+    duration = models.IntegerField()
+    problems = models.ManyToManyField(Problem, related_name="contests")
+    users = models.ManyToManyField(User,related_name="contests")
+
+    def __str__(self):
+        return f"Contest - {self.id}"
