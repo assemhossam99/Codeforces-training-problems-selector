@@ -107,7 +107,7 @@ def register_view(request):
             })
         login(request, user)
         updateUsersProblems(request)
-        return render(request, 'index.html')
+        return render(request, 'problems/index.html')
     else:
         return render(request, "problems/register.html")
 
@@ -134,7 +134,10 @@ def updateUsersProblems(request):
 def problems(request):
     if request.user.is_authenticated:
         updateUsersProblems(request)
-        userRating = int(requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]["rating"])
+        if "rating" in requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]:
+            userRating = int(requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]["rating"])
+        else:
+            userRating = 800
         userRating = (userRating // 100) * 100
         minRating = max(800, userRating - 200)
         maxRating = min(4000, userRating + 400)
