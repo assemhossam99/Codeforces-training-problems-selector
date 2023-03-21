@@ -1,5 +1,9 @@
 {% extends "problems/layout.html" %}
 
+{% block title %}
+    Sheet - {{id}}
+{% endblock %}
+
 {% block body %}
 
     <div class="problems_container">
@@ -13,6 +17,11 @@
                 </a>
             {% endfor %}
         </ul>
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            <input type="hidden" value="{{id}}" name="id" >
+            <input type="submit" class="delete-button" value="Delete Sheet" name="delete-sheet">
+        </form>
     </div>
 
 {% endblock %}

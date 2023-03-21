@@ -1,12 +1,16 @@
 {% extends "problems/layout.html" %}
 
+{% block title %}
+    Create New Sheet
+{% endblock %}
+
 {% block body %}
 
     {% if errorMessage %}
         <div class="errorMessage">{{errorMessage}}</div>
     {% endif %}
 
-    <form method="post" action="{% url 'newSheet' %}">
+    <form method="post" action="{% url 'newSheet' %}" class="main-form">
         {% csrf_token %}
         <label> Enter all the users to particpate in the sheet separated by a comma</label>
         <input type="text" placeholder="Users" name="users" class="form-data">

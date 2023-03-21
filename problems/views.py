@@ -13,6 +13,14 @@ import datetime
 allProblems = []
 
 def index(request):
+    message = ""
+    if request.method == "POST":
+        ID = request.POST["id"]
+        if 'delete-contest' in request.POST:
+            Contest.objects.get(id=ID).delete()
+        else:
+            Sheet.objects.get(id=ID).delete()
+        message = "Deleted"
     lastTime = LastProblemUpdate.objects.get(pk = 1).lastUpdate
     curTime = datetime.datetime.now()
     if  lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year: 
@@ -290,4 +298,27 @@ def sheet(request, sheetID):
     return render(request, "problems/sheet.html", {
         'problems' : sheetProblems,
         'id' : sheetID
+    })
+
+
+def contests(request, username):
+    allContests = Contest.objects.all()
+    userContests = []
+    for contest in allContests:
+        if contest.users.filter(username=username).exists():
+            userContests.append(contest)
+    userContests = reversed(userContests)
+    return render(request, "problems/contests.html", {
+        'contests' : userContests
+    })
+
+def sheets(request, username):
+    allSheets = Sheet.objects.all()
+    userSheets = []
+    for sheet in allSheets:
+        if sheet.users.filter(username=username).exists():
+            userSheets.append(sheet)
+    userSheets = reversed(userSheets)
+    return render(request, "problems/sheets.html", {
+        'sheets' : userSheets
     })

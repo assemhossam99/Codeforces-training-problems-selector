@@ -1,12 +1,16 @@
 {% extends "problems/layout.html" %}
 
+{% block title %}
+    Create New Contest
+{% endblock %}
+
 {% block body %}
 
     {% if errorMessage %}
         <div class="errorMessage">{{errorMessage}}</div>
     {% endif %}
 
-    <form method="post" action="{% url 'newContest' %}">
+    <form method="post" action="{% url 'newContest' %}" class="main-form">
         {% csrf_token %}
         <label> Enter all the users to particpate in the contest separated by a comma:</label>
         <input type="text" placeholder="Users" name="users" class="form-data">

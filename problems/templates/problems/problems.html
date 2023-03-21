@@ -1,5 +1,9 @@
 {% extends "problems/layout.html" %}
 
+{% block title %}
+    {{request.user.usernam}} - Problems
+{% endblock %}
+
 {% block body %}
 
     <div class="problems_container">

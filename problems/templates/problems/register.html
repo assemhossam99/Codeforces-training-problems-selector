@@ -1,12 +1,16 @@
 {% extends "problems/layout.html" %}
 {% load static %}
 
+{% block title %}
+    Register
+{% endblock %}
+
 {% block body %}
 
     {% if message %}
         <div>{{message}}</div>
     {% endif %}
-    <form method="post"  id="register-form" action="{% url 'register_view' %}">
+    <form method="post"  id="register-form" action="{% url 'register_view' %}" class="main-form">
         {%csrf_token%}
         <input type="text" placeholder="Username" name="username" class="form-data">
         <input type="email" placeholder="Email" name="email" class="form-data">
