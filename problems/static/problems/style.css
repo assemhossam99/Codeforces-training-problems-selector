@@ -1,10 +1,28 @@
 body{
-    background-color: rgb(52, 52, 52) !important;
+    /* background-color: rgb(52, 52, 52) !important; */
+    background-color: black !important;
 }
 
 #links{
     list-style-type: none;
+    display: inline;
 }
+
+.nav-button{
+    display: inline-block;
+}
+
+.name-header{
+    display: inline-block;
+    font-size: 25px;
+    padding: 10px 0;
+    color: rgb(19, 244, 79);
+}
+
+.nav-button{
+    float: right;
+}
+
 
 h2, h6, p{
     color: white;
@@ -13,27 +31,36 @@ h2, h6, p{
 .problem{
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     padding: 20px;
-    width: 50%;
     border: solid;
     border-width: 1px;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin:10px 10px 10px -30px;
     list-style: none;
     color:white;
 }
 
 .problem:hover{
-    background-color: rgb(46, 192, 46);
+    background-color: rgb(19, 244, 79);
     font-weight: bold;
     color: black;
+    
 }
 
 .problemLink{
+    display: block;
     color: black;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    text-decoration: none !important;
 }
 
 .problems_container{
+    background-color: black;
+    border: solid rgb(61, 61, 61) 1px;
+    width: 50%;
+    margin: 0 auto;
     text-align: center;
+    margin-top: 50px;
 }
 
 ul #problems{
@@ -42,13 +69,123 @@ ul #problems{
 }
 
 .errorMessage{
-    width: 100%;
+    width: 95%;
     text-align: center;
     background-color: rgb(226, 161, 161);
     color: rgb(130, 7, 7);
-    padding: 10px;
+    padding: 20px 10px;
     margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
     border: solid;
     border-color: rgb(116, 5, 5);
     font-weight: bold;
+}
+
+.confirmation-message{
+    width: 95%;
+    text-align: center;
+    background-color: rgb(105, 253, 105);
+    color: rgb(22, 109, 22);
+    padding: 20px 10px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid;
+    border-color: rgb(33, 161, 33);
+    font-weight: bold;
+}
+
+.nav-button a{
+    margin-top: 5px;
+    display: block;
+    padding: 10px 20px;
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.nav-button a:hover{
+    color: rgb(19, 244, 79) !important;
+    text-decoration: none;
+    background-color: rgb(58, 58, 58);
+}
+
+.nav-bar{
+    background-color: black;
+    padding: 5px;
+    height: 60px;
+    width: 100%;
+    border-bottom: solid white 5px;
+}
+
+form{
+    background-color: black;
+    border:solid;
+    width:500px;
+    padding: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+}
+
+input{
+    display: block;
+}
+
+.submit-button{
+    width: 100%;
+    margin: 20px 0;
+    padding: 5px;
+    background-color: rgb(19, 244, 79);
+    border-style: none;
+    font-weight: bold;
+}
+
+.submit-button:hover{
+    background-color: rgb(9, 178, 54);
+    font-weight: bold;
+    color: white;
+}
+
+.form-data{
+    width: 100%;
+    padding: 5px;
+    margin: 20px 0;
+    background-color: black;
+    border-color: rgb(61, 61, 61);
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    color: white;
+}
+
+form p, label{
+    text-align: center;
+}
+
+.username{
+    font-weight: bolder;
+}
+
+label{
+    color: white;
+    border: solid rgb(46, 46, 46) 1px;
+    padding: 5px;
+}
+
+form .topic{
+    border: none;
+    margin: 20px 0 0 0;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.sec-title{
+    color: rgb(19, 244, 79);
+    text-align-last: center;
+    padding: 20px;
+    font-size: 25px;
+    border-bottom: solid rgb(61, 61, 61) 5px;
+    margin-bottom: 20px;
 }

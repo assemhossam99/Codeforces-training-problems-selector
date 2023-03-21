@@ -37,6 +37,7 @@ def index(request):
 
     allContests = Contest.objects.all()
     userContests = []
+    allContests = reversed(allContests)
     for contest in allContests:
         if len(userContests) == 5:
             break
@@ -45,6 +46,7 @@ def index(request):
 
     allSheets = Sheet.objects.all()
     userSheets = []
+    allSheets = reversed(allSheets)
     for sheet in allSheets:
         if len(userSheets) > 5:
             break
@@ -64,8 +66,8 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "problems/index.html", {
-                'message' : 'can not log in'
+            return render(request, "problems/login.html", {
+                'message' : 'Invalid Username or Password'
             })
     return render(request, "problems/login.html")
 
@@ -161,7 +163,7 @@ def newContest(request):
     if request.method == "POST":
         import pytz
         errorMessage = ""
-        users = request.POST["users"].split(',')
+        users = request.POST["users"].replace(" ", "").split(',')
         for user in users:
             if not User.objects.filter(username=user).exists():
                 errorMessage = f"user {user} is not registered"
@@ -170,7 +172,7 @@ def newContest(request):
 
         if duration == "" or int(duration) < 10:
             errorMessage = "Contest duration must be at least 10 minutes" 
-        if errorMessage != None:
+        if errorMessage != "":
             return render(request, "problems/newContest.html", {
                 'errorMessage' : errorMessage
             })
@@ -238,16 +240,16 @@ def getProblem(problems, users, tags, problemNumbers):
 def newSheet(request):
     if request.method == "POST":
         errorMessage = ""
-        users = request.POST["users"].split(',')
+        users = request.POST["users"].replace(" ", "").split(',')
         for user in users:
             if not User.objects.filter(username=user).exists():
                 errorMessage = f"user {user} is not registered"
         tags=request.POST.getlist('tags')   
         minRate = request.POST['minRate']
         maxRate = request.POST['maxRate']
-        if  minRate == None or  int(minRate) < 800:
+        if  minRate == "" or  int(minRate) < 800:
             minRate = 800
-        if maxRate == None or int(maxRate) > 4000:
+        if maxRate == "" or int(maxRate) > 4000:
             maxRate = 4000
         print(maxRate)
         problemNumbers = request.POST['problemsNumber']

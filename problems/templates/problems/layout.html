@@ -9,45 +9,49 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     </head>
     <body>
-        <h2>Codeforces Problems</h2>
-        {% if user.is_authenticated  %}
-            <h6>Signed in as {{user.username}}</h6>
-        {% endif %}
-        <ul id="links">
-            <li>
-                <a href="{% url 'index' %}"> Home </a>
-            </li>
-            {% if user.is_authenticated %}
-                <li>
-                    <a href="{% url 'logout_view' %}"> Logout </a>
-                </li>
-                
-                <li>
-                    <a href="{% url 'problems' %}"> Solve Problems </a>
-                </li>
-                
-                <li>
-                    <a href="{% url 'newContest' %}"> Create New Contest </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'newSheet' %}"> Create New Sheet </a>
-                </li>
-                
-            {%else%}
-                <li>
-                    <a href="{% url 'login_view' %}"> Login</a>
-                </li>
-
-                <li>
-                    <a href="{% url 'register_view' %}"> Register</a>
-                </li>
+        <div class="nav-bar">
             
-            {%endif%}
-        </ul>
-        {% block body %}
-        {% endblock %}
-    </body>
-    <!-- <script src="{% static 'problems/register.js' %}"></script> -->
+            <h2 class="name-header">Codeforces Problems</h2>
+            <ul id="links">
+                {% if user.is_authenticated  %}
+                    <li class="nav-button">
+                        <a href="{% url 'index' %}" class="username">{{user.username}}</a>
+                    </li>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <li class="nav-button">
+                        <a href="{% url 'logout_view' %}"> Logout </a>
+                    </li>
 
-</html>
+                    <li class="nav-button">
+                        <a href="{% url 'newContest' %}"> Create New Contest </a>
+                    </li>
+                    
+                    <li class="nav-button">
+                        <a href="{% url 'newSheet' %}"> Create New Sheet </a>
+                    </li>
+
+                    <li class="nav-button">
+                        <a href="{% url 'problems' %}"> Solve Problems </a>
+                    </li>
+                
+                {%else%}
+                    <li class="nav-button">
+                        <a href="{% url 'register_view' %}"> Register</a>
+                    </li>
+
+                    <li class="nav-button">
+                        <a href="{% url 'login_view' %}"> Login</a>
+                    </li>
+                {%endif%}
+                <li class="nav-button">
+                    <a href="{% url 'index' %}"> Home </a>
+                </li>
+            </ul>
+        </div>
+            {% block body %}
+            {% endblock %}
+        </body>
+        <!-- <script src="{% static 'problems/register.js' %}"></script> -->
+        
+        </html>

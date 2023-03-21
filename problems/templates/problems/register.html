@@ -8,12 +8,12 @@
     {% endif %}
     <form method="post"  id="register-form" action="{% url 'register_view' %}">
         {%csrf_token%}
-        <input type="text" placeholder="Username" name="username">
-        <input type="email" placeholder="Email" name="email">
-        <input type="password" placeholder="Password" name="password">
-        <input type="password" placeholder="Confirm Password" name="confirmation">
-        <input type="submit" value="Register"> 
+        <input type="text" placeholder="Username" name="username" class="form-data">
+        <input type="email" placeholder="Email" name="email" class="form-data">
+        <input type="password" placeholder="Password" name="password" class="form-data">
+        <input type="password" placeholder="Confirm Password" name="confirmation" class="form-data">
+        <input type="submit" value="Register" class="submit-button"> 
+        <p>Already have an account? <a href="{% url 'login_view' %}">Login</a></p>
     </form>
 
-    <p>Already have an account? <a href="{% url 'login_view' %}">Login</a></p>
 {% endblock %}

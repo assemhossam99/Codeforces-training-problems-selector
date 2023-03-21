@@ -3,6 +3,7 @@
 {% block body %}
 
     <div class="problems_container">
+        <h2 class="sec-title">Unsolved Problems Based on {{request.user.username}} Codeforces Rating </h2>
         <ul id="problems">
             {% for problem in problems %}
                 <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}" class="problemLink">

@@ -7,8 +7,8 @@
         <h1>{{message}}</h1>
     {% endif %}
 
-    <h2>Contests</h2>
     <div class="problems_container">
+        <h2 class="sec-title">Recent Contests</h2>
         <ul id="problems">
             {% for contest in contests %}
                 <a href="{% url 'contest' contest.id %}" class="problemLink">
@@ -18,18 +18,23 @@
                 </a>
             {% endfor %}
         </ul>
+        <div><a href="">See All..</a></div>
     </div>
 
-    <h2>Sheets</h2>
+    <hr>
+    
     <div class="problems_container">
+        <h2 class="sec-title">Recent Sheets</h2>
         <ul id="problems">
-            {% for sheet in sheets %}
-                <a href="{% url 'sheet' sheet.id %}" class="problemLink">
-                    <li class="problem">
-                        Sheet - {{sheet.id}}
-                    </li>
-                </a>
-            {% endfor %}
-        </ul>
+                {% for sheet in sheets %}
+                    <a href="{% url 'sheet' sheet.id %}" class="problemLink">
+                        <li class="problem">
+                            Sheet - {{sheet.id}}
+                        </li>
+                    </a>
+                {% endfor %}
+            </ul>
+            <div><a href="">See All..</a></div>
+        </div>
     </div>
 {% endblock %}

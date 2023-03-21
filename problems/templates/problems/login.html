@@ -2,12 +2,16 @@
 
 {% block body %}
 
+    {% if message %}
+        <div class="errorMessage">{{message}}</div>
+    {% endif %}
+    
     <form method="post" action="{% url 'login_view' %}">
         {%csrf_token%}
-        <input type="text" placeholder="Username" name="username">
-        <input type="password" placeholder="Password" name="password">
-        <input type="submit" value="Login"> 
+        <input type="text" placeholder="Username" name="username" class="form-data">
+        <input type="password" placeholder="Password" name="password" class="form-data">
+        <input type="submit" value="Login" class="submit-button"> 
+        <p>Don't have an account? <a href="{% url 'register_view' %}"> Register </a></p>
     </form>
 
-    <p>Don't have an account? <a href="{% url 'register_view' %}"> Register </a></p>
 {% endblock %}

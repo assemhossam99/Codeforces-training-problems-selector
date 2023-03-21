@@ -8,9 +8,13 @@
 
     <form method="post" action="{% url 'newSheet' %}">
         {% csrf_token %}
-        <label> Enter all the users to particpate in the contest separated by a comma:</label>
-        <input type="text" placeholder="Users" name="users">
-        <select name="tags" id="tags" multiple>
+        <label> Enter all the users to particpate in the sheet separated by a comma</label>
+        <input type="text" placeholder="Users" name="users" class="form-data">
+        <input name="minRate" placeholder="Min Rate" type="number" class="form-data"> 
+        <input name="maxRate" placeholder="Max Rate" type="number" class="form-data">
+        <input name="problemsNumber" placeholder="Number of Problems" class="form-data">
+        <label class="topic">Choose Problems Topics:</label>
+        <select name="tags" id="tags" multiple class="form-data">
             <!-- <option value=""></option> -->
             {% for tag in tags %}
                 <option value="{{tag.name}}">
@@ -18,10 +22,7 @@
                 </option>
             {% endfor %}
         </select>
-        <input name="minRate" placeholder="Min Rate" type="number"> 
-        <input name="maxRate" placeholder="Max Rate" type="number">
-        <input name="problemsNumber" placeholder="Number of Problems">
-        <input type="submit" value="Create Sheet">
+        <input type="submit" value="Create Sheet" class="submit-button">
     </form>
 
 {% endblock %}

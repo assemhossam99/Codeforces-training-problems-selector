@@ -9,10 +9,10 @@
     <form method="post" action="{% url 'newContest' %}">
         {% csrf_token %}
         <label> Enter all the users to particpate in the contest separated by a comma:</label>
-        <input type="text" placeholder="Users" name="users">
-        <input type="datetime-local" name="startDate">
-        <input type="number" placeholder="Duration in seconds" name="duration">
-        <input type="submit" value="Create Contest">
+        <input type="text" placeholder="Users" name="users" class="form-data">
+        <input type="datetime-local" name="startDate" class="form-data">
+        <input type="number" placeholder="Duration in minutes" name="duration" class="form-data">
+        <input type="submit" value="Create Contest" class="submit-button">
     </form>
 
 {% endblock %}

@@ -2,12 +2,14 @@
 
 {% block body %}
 
-<h2>Contest - {{id}}</h2>
 {% if ended %}
-    <h3>Contest ended.</h3>
+    <div class="errorMessage">Contest ended.</div>
 {% else  %}
-    <div>Ends at {{end}}</div>
+    <div class="confirmation-message">Contest is Running. Ends at {{end}}</div>
+{% endif %}
+    <!-- <div class="confirmation-message">Ends at {{end}}</div> -->
     <div class="problems_container">
+        <h2 class="sec-title">Contest - {{id}} Problems</h2>
         <ul id="problems">
             {% for problem in problems %}
             <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}" class="problemLink">
@@ -18,6 +20,5 @@
             {% endfor %}
         </ul>
     </div>
-{% endif %}
     
 {% endblock %}
