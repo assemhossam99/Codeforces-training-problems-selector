@@ -5,6 +5,7 @@ from django.db import models
 
 class User(AbstractUser):
     lastUpdate = models.DateTimeField(null=True)
+    # rating 
 
 class LastProblemUpdate(models.Model):
     lastUpdate = models.DateTimeField(null=True)
@@ -44,3 +45,13 @@ class Sheet(models.Model):
 
     def __str__(self):
         return f"Sheet - {self.id}"
+
+# class Standing(models.Model):
+#     score1 = models.IntegerField(default=0)
+#     score2 = models.IntegerField(default=0)
+#     score3 = models.IntegerField(default=0)
+#     score4 = models.IntegerField(default=0)
+#     score5 = models.IntegerField(default=0)
+#     totalScore = models.IntegerField(default=0)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     contest = models.ForeignKey(Contest, on_delete=models.CASCASDE)

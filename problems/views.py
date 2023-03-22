@@ -28,7 +28,7 @@ def index(request):
         
         for problem in allProblems:
             if len(Problem.objects.filter(contestID=problem["contestId"], index=problem["index"])) > 0:
-                continue
+                break
             newProblem = Problem(name=problem["name"], index=problem["index"], contestID=problem["contestId"], rate =problem.get("rating"))
             newProblem.save()
             for tag in problem["tags"]:
@@ -134,22 +134,20 @@ def updateUsersProblems(request):
 def problems(request):
     if request.user.is_authenticated:
         updateUsersProblems(request)
-        if "rating" in requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]:
-            userRating = int(requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]["rating"])
+        response = requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]
+        if "rating" in response:
+            userRating = int(response["rating"])
         else:
             userRating = 800
         userRating = (userRating // 100) * 100
         minRating = max(800, userRating - 200)
         maxRating = min(4000, userRating + 400)
         userProblems = []
-        print(request.user)
         for curRate in range(minRating, maxRating, 100):
-            print(curRate)
             tmpList = []
             for problem in Problem.objects.exclude(~Q(rate=curRate) | Q(rate=None)):
                 if not problem.users.filter(username=request.user.username).exists():
                     tmpList.append(problem)
-            print(len(tmpList))
             userProblems.append(random.choice(tmpList))
 
         return render(request, "problems/problems.html", {
@@ -171,6 +169,8 @@ def getProblems(problems, users):
             
 
 def newContest(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
     if request.method == "POST":
         import pytz
         errorMessage = ""
@@ -193,7 +193,6 @@ def newContest(request):
         contestProblems.append(getProblems(Problem.objects.filter(rate__range=(1200, 1600)), users))
         contestProblems.append(getProblems(Problem.objects.filter(rate__range=(1600, 2000)), users))
         contestProblems.append(getProblems(Problem.objects.filter(rate__range=(2000, 4000)), users))
-        print(contestProblems)
         contest = Contest(duration=duration, startTime=startDate)
         contest.save()
         for user in users:
@@ -206,10 +205,13 @@ def newContest(request):
 
 
 def contest(request, contestID):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
     import pytz
     contest = Contest.objects.get(id=contestID)
+    if not contest.users.filter(username=request.user.username).exists():
+        return HttpResponseRedirect(reverse('index'))
     contestProblems = contest.problems.all().order_by('rate')
-
     start = contest.startTime
     duration = contest.duration
     time_change = datetime.timedelta(minutes=duration)
@@ -249,6 +251,8 @@ def getProblem(problems, users, tags, problemNumbers):
     return choosen
 
 def newSheet(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
     if request.method == "POST":
         errorMessage = ""
         users = request.POST["users"].replace(" ", "").split(',')
@@ -295,8 +299,12 @@ def newSheet(request):
     })
 
 def sheet(request, sheetID):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
     sheet = Sheet.objects.get(id=sheetID)
-    sheetProblems = sheet.problems.all()
+    if not sheet.users.filter(username=request.user.username).exists():
+        return HttpResponseRedirect(reverse('index'))
+    sheetProblems = sheet.problems.all()   
 
     return render(request, "problems/sheet.html", {
         'problems' : sheetProblems,
@@ -305,6 +313,10 @@ def sheet(request, sheetID):
 
 
 def contests(request, username):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
+    if request.user.username != username:
+        return HttpResponseRedirect(reverse('index'))
     allContests = Contest.objects.all()
     userContests = []
     for contest in allContests:
@@ -316,6 +328,10 @@ def contests(request, username):
     })
 
 def sheets(request, username):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login_view'))
+    if request.user.username != username:
+        return HttpResponseRedirect(reverse('index'))
     allSheets = Sheet.objects.all()
     userSheets = []
     for sheet in allSheets:
