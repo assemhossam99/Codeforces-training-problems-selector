@@ -418,10 +418,6 @@ def standing(request, contestID):
 
     standingRows = Standing.objects.filter(contest=contest).order_by('problemCnt', '-totalScore')
     standingRows = reversed(standingRows)
-    # standingRows = []
-    # for standing in standingRows:
-    #     tmp = []
-    #     tmp.append()
     return render(request, "problems/standing.html", {
         'standings' : standingRows,
         'contestID' : contestID

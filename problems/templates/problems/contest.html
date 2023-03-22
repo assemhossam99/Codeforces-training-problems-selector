@@ -7,6 +7,7 @@
 {% block body %}
 
 {% if started %}
+
     {% if ended %}
         <div class="errorMessage">Contest ended.</div>
     {% else  %}
@@ -22,6 +23,7 @@
                         Problem {{forloop.counter}} - {{problem}}
                     </li>
                 </a>
+                {% if not ended %}
                 <form method="post" class="solved-form" action="{% url 'standing' id %}" name="solved">
                     {% csrf_token %}
                     <input type="hidden" name="contestID" value="{{problem.contestID}}">
@@ -31,6 +33,7 @@
                     <input type="hidden" name="problemId" value="{{forloop.counter}}">
                     <input type="submit" name="solved" value="Solved" class="solved">
                 </form>
+                {%endif%}
                 {% endfor %}
             </ul>
             <form method="post" action="{% url 'standing' id %}">
