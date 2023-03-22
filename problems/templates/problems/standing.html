@@ -6,7 +6,7 @@
 
 {% block body %}
 
-    <div>
+    <div class="standing-container">
         <table>
             <tr>
                 <th>User</th>
@@ -51,7 +51,7 @@
                 </tr>
             {% endfor %}
         </table>
-        <a href="{% url 'contest' contestID %}" class="submit-button"> Problems </a>
+        <a href="{% url 'contest' contestID %}" id="standing-button" > Problems </a>
     </div>
 
 {% endblock %}

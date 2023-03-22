@@ -158,7 +158,6 @@ input{
     background-color: rgb(19, 244, 79);
     font-weight: bold;
     color: black;
-    border: none;
 }
 
 .delete-button{
@@ -176,9 +175,11 @@ input{
     color: black;
 }
 
+
+
 #standing{
     width: 30%;
-    margin: 10px auto;
+    margin: 20px auto;
 }
 
 .form-data{
@@ -242,4 +243,27 @@ table, td, th{
 
 table{
     margin: 30px auto;
+}
+
+.standing-container{
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#standing-button{
+    width: 20%;
+    text-align: center;
+    font-weight: bold;
+    border: solid rgb(19, 244, 79) 2px;
+    padding: 15px;
+    text-decoration: none; 
+    display: block;
+    margin: 0 auto;
+    color: rgb(19, 244, 79);
+}
+
+#standing-button:hover{
+    background-color: rgb(19, 244, 79);
+    color: black;
 }

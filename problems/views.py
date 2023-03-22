@@ -215,21 +215,27 @@ def contest(request, contestID):
         return HttpResponseRedirect(reverse('index'))
     contestProblems = contest.problems.all().order_by('rate')
     start = contest.startTime
+    print(start)
     duration = contest.duration
     time_change = datetime.timedelta(minutes=duration)
     end = start + time_change
     end = end.replace(tzinfo=pytz.utc)
     now = datetime.datetime.now()
     now = now.replace(tzinfo=pytz.utc)
+    start = start.replace(tzinfo=pytz.utc)
     ended = False
+    started = False
     if now > end:
         ended = True
-    
+    if now >= start:
+        started = True
+    print(now, ' ', start)
     return render(request, "problems/contest.html", {
         'problems' : contestProblems,
         'id' : contestID,
         'end' : end,
-        'ended' : ended
+        'ended' : ended,
+        'started' : started
     })
 
 def getProblem(problems, users, tags, problemNumbers):
