@@ -14,6 +14,12 @@ import collections
 
 allProblems = []
 
+def updateRating(user):
+    rating = requests.get(f"https://codeforces.com/api/user.info?handles={user}").json()["result"][0]["rating"]
+    curUser = User.objects.filter(username=user)
+    curUser.update(rating=rating)
+
+
 def index(request):
     message = ""
     if request.method == "POST":
@@ -118,6 +124,7 @@ def updateUsersProblems(request):
         lastTime = request.user.lastUpdate
         curTime = datetime.datetime.now()
         if lastTime == None or lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year:
+            updateRating(request.user.username)
             results = requests.get(f"https://codeforces.com/api/user.status?handle={request.user.username}").json()["result"]
             for result in results:
                 verdict = result["verdict"]

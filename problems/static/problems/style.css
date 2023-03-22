@@ -236,9 +236,13 @@ form .topic{
 }
 
 table, td, th{
-    color: white;
     padding: 20px;
-    border:solid;
+    border:solid white 2px;
+    text-align: center;
+}
+
+th, td{
+    color: rgb(19, 244, 79);
 }
 
 table{
