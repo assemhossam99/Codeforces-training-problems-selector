@@ -3,11 +3,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
-from .models import User, Tag, Problem, LastProblemUpdate, Contest, Sheet
+from .models import User, Tag, Problem, LastProblemUpdate, Contest, Sheet, Standing
 from django.db.models import Q
 import requests
 import random
 import datetime
+import time
+import collections
 
 
 allProblems = []
@@ -23,7 +25,7 @@ def index(request):
         message = "Deleted"
     lastTime = LastProblemUpdate.objects.get(pk = 1).lastUpdate
     curTime = datetime.datetime.now()
-    if  lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year: 
+    if lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year: 
         allProblems = requests.get(f"https://codeforces.com/api/problemset.problems").json()["result"]["problems"]
         
         for problem in allProblems:
@@ -99,7 +101,7 @@ def register_view(request):
                 'message' : 'Password does not matchn'
             })
         try:
-            user = User.objects.create_user(username, email, password)
+            user = User.objects.create_user(username, email, password, rating=int(respond["result"][0]["rating"]))
             user.save()
         except IntegrityError:
             return render(request, "problems/register.html", {
@@ -120,7 +122,7 @@ def updateUsersProblems(request):
             for result in results:
                 verdict = result["verdict"]
                 if len(result["problem"]["tags"]) > 0 and verdict == "OK" and result["contestId"] <= 1000000:
-                    if len(Problem.objects.filter(contestID=result["contestId"], index=result["problem"]["index"])) == 0:
+                    if not Problem.objects.filter(contestID=result["contestId"], index=result["problem"]["index"]).exists():
                         continue
                     accProblem = Problem.objects.get(contestID=result["contestId"], index=result["problem"]["index"])
                     if request.user in accProblem.users.all():
@@ -134,10 +136,8 @@ def updateUsersProblems(request):
 def problems(request):
     if request.user.is_authenticated:
         updateUsersProblems(request)
-        response = requests.get(f"https://codeforces.com/api/user.info?handles={request.user}").json()["result"][0]
-        if "rating" in response:
-            userRating = int(response["rating"])
-        else:
+        userRating = request.user.rating
+        if userRating < 800:
             userRating = 800
         userRating = (userRating // 100) * 100
         minRating = max(800, userRating - 200)
@@ -196,6 +196,8 @@ def newContest(request):
         contest = Contest(duration=duration, startTime=startDate)
         contest.save()
         for user in users:
+            standings = Standing(user=User.objects.get(username=user), contest=contest)
+            standings.save()
             contest.users.add(User.objects.get(username=user))
         for problem in contestProblems:
             contest.problems.add(problem)
@@ -340,4 +342,74 @@ def sheets(request, username):
     userSheets = reversed(userSheets)
     return render(request, "problems/sheets.html", {
         'sheets' : userSheets
+    })
+
+def standing(request, contestID):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('login'))
+    if request.user not in Contest.objects.get(id=contestID).users.all():
+        return HttpResponseRedirect(reverse('index'))
+    contest = Contest.objects.get(id=contestID)
+    if request.method == "POST":
+        if 'solved' in request.POST:
+            problemName = request.POST["name"]
+            problemContestID = request.POST["contestID"]
+            problmeIndex = request.POST["index"]
+            problemId = int(request.POST["problemId"])
+            username = request.POST["user"]
+            user = User.objects.get(username=username)
+            contestStartTime = Contest.objects.get(id=contestID).startTime
+            contestStartTime = (time.mktime(contestStartTime.timetuple()))
+            results = requests.get(f"https://codeforces.com/api/user.status?handle={request.user.username}").json()["result"]
+            solved = False
+            penalty = 0
+            wa = 0
+            for result in results:
+                submissionTime = int(result["creationTimeSeconds"])
+                if submissionTime < int(contestStartTime):
+                    break
+                if int(result["contestId"]) == int(problemContestID) and result["problem"]["index"] == problmeIndex:
+                    if result["verdict"] == "OK":
+                        if solved == False:
+                            solved = True
+                            print(solved)
+                            penalty = (submissionTime - int(contestStartTime)) // 60
+                    else:
+                        penalty += 10
+                        wa += 1
+            print(solved)
+            if solved == True:
+                standing = Standing.objects.get(contest=contest, user=user)
+                if problemId == 1 and standing.score1 == -1:
+                    print('here')
+                    standing.score1 += 1 + wa
+                    standing.problemCnt += 1
+                    standing.totalScore += penalty
+                elif problemId == 2 and standing.score2 == -1:
+                    standing.score2 += 1 + wa
+                    standing.problemCnt += 1
+                    standing.totalScore += penalty
+                elif problemId == 3 and standing.score3 == -1:
+                    standing.score3 += 1 + wa
+                    standing.problemCnt += 1
+                    standing.totalScore += penalty
+                elif problemId == 4 and standing.score4 == -1:
+                    standing.score4 += 1 + wa
+                    standing.problemCnt += 1
+                    standing.totalScore += penalty
+                elif problemId == 5 and standing.score5 == -1:
+                    standing.score5 += 1 + wa
+                    standing.problemCnt += 1
+                    standing.totalScore += penalty
+                standing.save()
+
+    standingRows = Standing.objects.filter(contest=contest).order_by('problemCnt', '-totalScore')
+    standingRows = reversed(standingRows)
+    # standingRows = []
+    # for standing in standingRows:
+    #     tmp = []
+    #     tmp.append()
+    return render(request, "problems/standing.html", {
+        'standings' : standingRows,
+        'contestID' : contestID
     })

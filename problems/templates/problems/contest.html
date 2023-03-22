@@ -18,16 +18,30 @@
             {% for problem in problems %}
             <a href="https://codeforces.com/contest/{{problem.contestID}}/problem/{{problem.index}}" class="problemLink">
                 <li class="problem">
-                    {{problem}}
+                    Problem {{forloop.counter}} - {{problem}}
                 </li>
             </a>
+            <form method="post" class="solved-form" action="{% url 'standing' id %}" name="solved">
+                {% csrf_token %}
+                <input type="hidden" name="contestID" value="{{problem.contestID}}">
+                <input type="hidden" name="index" value="{{problem.index}}">
+                <input type="hidden" name="name" value="{{problem.name}}">
+                <input type="hidden" name="user" value="{{request.user.username}}">
+                <input type="hidden" name="problemId" value="{{forloop.counter}}">
+                <input type="submit" name="solved" value="Solved" class="solved">
+            </form>
             {% endfor %}
         </ul>
+        <form method="post" action="{% url 'standing' id %}">
+            {% csrf_token %}
+            <input type="submit"  class="submit-button" id="standing" value="Standings">
+        </form>
         <form method="post" action="{% url 'index' %}">
             {% csrf_token %}
             <input type="hidden" value="{{id}}" name="id">
             <input type="submit" class="delete-button" value="Delete Contest" name="delete-contest">
         </form>
+
     </div>
     
 {% endblock %}

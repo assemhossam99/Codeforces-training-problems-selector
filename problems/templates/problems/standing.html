@@ -1,0 +1,57 @@
+{% extends "problems/layout.html" %}
+
+{% block title %}
+    Standing
+{% endblock %}
+
+{% block body %}
+
+    <div>
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Solved Count</th>
+                <th>Penalty</th>
+                <th>Problem 1</th>
+                <th>Problem 2</th>
+                <th>Problem 3</th>
+                <th>Problem 4</th>
+                <th>Problem 5</th>
+            </tr>
+            {% for standing in standings %}
+                <tr>
+                    <td>{{standing.user.username}}</td>
+                    <td>{{standing.problemCnt}}</td>
+                    <td>{{standing.totalScore}}</td>
+                    <td>
+                        {%if standing.score1 != -1%}
+                            + {{standing.score1}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {%if standing.score2 != -1%}
+                            + {{standing.score2}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {%if standing.score3 != -1%}
+                            + {{standing.score3}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {%if standing.score4 != -1%}
+                            + {{standing.score4}}
+                        {%endif%}
+                    </td>
+                    <td>
+                        {%if standing.score5 != -1%}
+                            + {{standing.score5}}
+                        {%endif%}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <a href="{% url 'contest' contestID %}" class="submit-button"> Problems </a>
+    </div>
+
+{% endblock %}

@@ -12,5 +12,6 @@ urlpatterns = [
     path('contest/<int:contestID>', views.contest, name="contest"),
     path('sheet/<int:sheetID>', views.sheet, name="sheet"),
     path('contests/<str:username>', views.contests, name="contests"),
-    path('sheets/<str:username>', views.sheets, name="sheets")
+    path('sheets/<str:username>', views.sheets, name="sheets"),
+    path('contest-standing/<int:contestID>', views.standing, name="standing")
 ]

@@ -42,18 +42,34 @@ h2, h6, p{
 }
 
 .problemLink{
-    display: block;
+    display: inline-block;
     color: black;
-    width: 100%;
+    width: 70%;
     margin-left: auto;
     margin-right: auto;
     text-decoration: none !important;
 }
 
+.solved-form{
+    display: inline-block;
+    width: 20%;
+}
+
+.solved{
+    display: inline-block;
+    width: 20%;
+    color: white;
+    background-color: black;
+    border: solid white 1px;
+    padding: 20px;
+    width: 100%;
+}
+
+
 .problems_container{
     background-color: black;
     border: solid rgb(61, 61, 61) 1px;
-    width: 50%;
+    width: 80%;
     margin: 0 auto;
     text-align: center;
     margin-top: 50px;
@@ -138,10 +154,11 @@ input{
     font-weight: bold;
 }
 
-.submit-button:hover{
+.submit-button:hover, .solved:hover{
     background-color: rgb(19, 244, 79);
     font-weight: bold;
     color: black;
+    border: none;
 }
 
 .delete-button{
@@ -157,6 +174,11 @@ input{
 .delete-button:hover{
     background-color: rgb(216, 20, 20);
     color: black;
+}
+
+#standing{
+    width: 30%;
+    margin: 10px auto;
 }
 
 .form-data{
@@ -210,4 +232,14 @@ form .topic{
 
 .contact{
     color: white;
+}
+
+table, td, th{
+    color: white;
+    padding: 20px;
+    border:solid;
+}
+
+table{
+    margin: 30px auto;
 }
