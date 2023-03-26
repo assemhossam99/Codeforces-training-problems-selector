@@ -7,12 +7,14 @@
 
         <link href="{% static 'problems/style.css' %}" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <script src="{% static 'problems/index.js' %}"></script>
     </head>
     <body>
+        <div class="hidden-list-button">Menu</div>
         <div class="nav-bar">
             
-            <h2 class="name-header">Codeforces Problems</h2>
-            <ul id="links">
+            <h2  class="name-header">Codeforces Problems</h2>
+            <ul id="links" class="hidden-list">
                 {% if user.is_authenticated  %}
                     <li class="nav-button">
                         <a href="{% url 'index' %}" class="username">{{user.username}}</a>

@@ -36,10 +36,11 @@
                 {%endif%}
                 {% endfor %}
             </ul>
-            <form method="post" action="{% url 'standing' id %}">
+            <!-- <form method="post" action="{% url 'standing' id %}">
                 {% csrf_token %}
                 <input type="submit"  class="submit-button" id="standing" value="Standings">
-            </form>
+            </form> -->
+            <a href="{% url 'standing' id %}" class="submit-button"  id="standing">Standing </a>
             <form method="post" action="{% url 'index' %}">
                 {% csrf_token %}
                 <input type="hidden" value="{{id}}" name="id">

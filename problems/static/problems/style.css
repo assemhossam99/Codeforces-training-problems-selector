@@ -1,22 +1,39 @@
 body{
     background-color: black !important;
-    padding-bottom: 70px;
+    /* padding-bottom: 70px; */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    z-index: 20;
 }
 
 #links{
+    
     list-style-type: none;
-    display: inline;
+    float: right;
+    position: relative;
+    top: -60px;
+    z-index: 10000000;
+    background-color: black;
+    border: solid rgb(19, 244, 79) 1px;
+    padding: 0;
 }
 
 .nav-button{
-    display: inline-block;
-    float: right;
+    border-bottom: solid rgb(19, 244, 79) 1px;
+    text-align: center;
 }
 
 .name-header{
-    display: inline-block;
     font-size: 25px;
     padding: 10px 0;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(19, 244, 79);
+}
+
+.name-header:hover{
+    text-decoration: none;
     color: rgb(19, 244, 79);
 }
 
@@ -114,16 +131,18 @@ ul #problems{
     padding: 10px 20px;
     color: white !important;
     text-decoration: none !important;
+    width: 200px;
 }
 
 .nav-button a:hover{
     color: rgb(19, 244, 79) !important;
     text-decoration: none;
-    background-color: rgb(58, 58, 58);
+    /* background-color: rgb(58, 58, 58); */
 }
 
 .nav-bar{
     background-color: black;
+    margin-bottom: 50px;
     padding: 5px;
     height: 60px;
     width: 100%;
@@ -135,9 +154,7 @@ ul #problems{
     border:solid;
     width:500px;
     padding: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 100px;
+    margin: auto ;
 }
 
 input{
@@ -175,11 +192,11 @@ input{
     color: black;
 }
 
-
-
 #standing{
+    display: block;
     width: 30%;
     margin: 20px auto;
+    text-decoration: none;
 }
 
 .form-data{
@@ -226,13 +243,18 @@ form .topic{
 }
 
 .footer{
+    margin-top: auto;
+    padding-bottom: 10px;
     border-top: solid white 5px;
-    margin-top: 50px;
-    padding-bottom: 40px;
+    width: 100%;
+    background-color: black;
 }
 
 .contact{
     color: white;
+    display: inline-block;
+    float: right;
+    padding: 20px;
 }
 
 table, td, th{
@@ -270,4 +292,24 @@ table{
 #standing-button:hover{
     background-color: rgb(19, 244, 79);
     color: black;
+}
+
+.hidden-list{
+    display: none;
+}
+
+.hidden-list-button{
+    color: rgb(19, 244, 79) !important;
+    padding: 10px;
+    width: fit-content;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline;
+    position: relative;
+    left: 92%;
+    top: 5%;
+}
+
+.hidden-list-button:hover{
+    background-color: rgb(80, 80, 80);
 }

@@ -14,12 +14,6 @@ import collections
 
 allProblems = []
 
-def updateRating(user):
-    rating = requests.get(f"https://codeforces.com/api/user.info?handles={user}").json()["result"][0]["rating"]
-    curUser = User.objects.filter(username=user)
-    curUser.update(rating=rating)
-
-
 def index(request):
     message = ""
     if request.method == "POST":
@@ -123,8 +117,8 @@ def updateUsersProblems(request):
     if request.user.is_authenticated:
         lastTime = request.user.lastUpdate
         curTime = datetime.datetime.now()
-        if lastTime == None or lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year:
-            updateRating(request.user.username)
+        if  lastTime == None or lastTime.day != curTime.day or lastTime.month != curTime.month or lastTime.year != curTime.year:
+            updateRating(request)
             results = requests.get(f"https://codeforces.com/api/user.status?handle={request.user.username}").json()["result"]
             for result in results:
                 verdict = result["verdict"]
@@ -142,8 +136,12 @@ def updateUsersProblems(request):
 
 def problems(request):
     if request.user.is_authenticated:
-        updateUsersProblems(request)
+        rating = requests.get(f"https://codeforces.com/api/user.info?handles={request.user.username}").json()["result"][0]["rating"]
+        cur = User.objects.get(username=request.user.username)
+        cur.rating = rating
+        cur.save()
         userRating = request.user.rating
+        print(userRating)
         if userRating < 800:
             userRating = 800
         userRating = (userRating // 100) * 100
